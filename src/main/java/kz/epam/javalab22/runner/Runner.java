@@ -1,17 +1,13 @@
 package kz.epam.javalab22.runner;
 
-import kz.epam.javalab22.entity.Pier;
-import kz.epam.javalab22.entity.Port;
+import kz.epam.javalab22.entity.Ship;
 
-/**
- * Hello world!
- */
+import java.util.concurrent.Semaphore;
+
 public class Runner {
     public static void main(String[] args) {
-
-        Port port = new Port();
-        port.getPierList().add(new Pier(10));
-        port.getPierList().add(new Pier(10));
-
+        Semaphore sem = new Semaphore(2);
+        for(int i=50;i<60;i++)
+            new Ship(sem,i).start();
     }
 }
