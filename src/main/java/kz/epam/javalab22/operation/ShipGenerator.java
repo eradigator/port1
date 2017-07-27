@@ -1,22 +1,25 @@
 package kz.epam.javalab22.operation;
 
-import kz.epam.javalab22.entity.ShipList;
-import kz.epam.javalab22.entity.ship.SmallShip;
-
-import java.util.ArrayList;
-import java.util.List;
+import kz.epam.javalab22.entity.Ship;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 public class ShipGenerator extends Thread{
 
+    private Semaphore sem = new Semaphore(2);
+
     @Override
     public void run() {
-        for (int i = 0; i < 10; i++) {
-            int a = (int) (Math.random() * 50 + 50);
-            ShipList.getList().add(new SmallShip(a));
+
+        int shipsToGenerateCount = 10;
+
+        for (int i = 0; i < shipsToGenerateCount; i++) {
+            int randomBoxCount = (int) (Math.random() * 100 + 100);
+            new Ship(sem, randomBoxCount).start();
 
             try {
-                TimeUnit.SECONDS.sleep(1);
+                int randomArrivalInterval = (int) (Math.random() * 10);
+                TimeUnit.SECONDS.sleep(randomArrivalInterval);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
