@@ -7,4 +7,8 @@ public class Pier {
     public Pier(int unloadingSpeed) {
         this.unloadingSpeed = unloadingSpeed;
     }
+
+    public int getUnloadingSpeed() {
+        return unloadingSpeed;
+    }
 }
