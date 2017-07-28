@@ -8,11 +8,11 @@ import java.util.concurrent.Semaphore;
 
 public class PreUnloader extends Thread {
 
-    private Semaphore sem = new Semaphore(2);
+    private Semaphore sem = new Semaphore(1);
 
     PreUnloader(ConcurrentLinkedQueue<Ship> queue, Pier pier1, Pier pier2) {
         new Unloader(queue, pier1).start();
-        //new Unloader1(queue, pier2).start();
+        new Unloader1(queue, pier2).start();
     }
 
     @Override

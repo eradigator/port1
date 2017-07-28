@@ -37,10 +37,9 @@ public class Unloader1 extends Thread {
 
                     System.out.println(format.format(new Date()) + "Пирс1 - правая сторона: " +
                             "Разгрузка корабля: " + ship.hashCode() +  " закончилась.");
-                    pier.getSem().release();
-                    System.out.println(format.format(new Date()) +
-                            "Количество ожидающих кораблей: " + pier.getSem().getQueueLength());
+
                 }
+                pier.getSem().release();
 
             }
         } catch (InterruptedException e) {

@@ -36,12 +36,12 @@ public class Unloader extends Thread {
                     TimeUnit.SECONDS.sleep(unloadTime);
 
                     System.out.println(format.format(new Date()) + "Пирс1 - левая сторона: " +
-                            "Разгрузка корабля: " + ship.hashCode() +  " закончилась.");
-                    pier.getSem().release();
+                            "Разгрузка корабля: " + ship.hashCode() + " закончилась.");
+
                     System.out.println(format.format(new Date()) +
                             "Количество ожидающих кораблей: " + pier.getSem().getQueueLength());
                 }
-
+                pier.getSem().release();
 
             }
         } catch (InterruptedException e) {
