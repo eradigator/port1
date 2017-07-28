@@ -8,13 +8,14 @@ import java.util.Date;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 
-public class Unloader extends Thread {
+public class Unloader1 extends Thread {
 
     private Ship ship;
     private Pier pier;
+
     ConcurrentLinkedQueue<Ship> queue = new ConcurrentLinkedQueue<>();
 
-    Unloader(ConcurrentLinkedQueue<Ship> queue, Pier pier) {
+    Unloader1(ConcurrentLinkedQueue<Ship> queue, Pier pier) {
         this.queue = queue;
         this.pier = pier;
     }
@@ -26,22 +27,20 @@ public class Unloader extends Thread {
 
         try {
             {
-
                 pier.getSem().acquire();
 
                 if ((ship = queue.poll()) != null) {
                     long unloadTime = (long) ship.getBoxCount() / pier.getUnloadingSpeed();
-                    System.out.println(format.format(new Date()) + "Пирс1 - левая сторона: " +
+                    System.out.println(format.format(new Date()) + "Пирс1 - правая сторона: " +
                             "Разгрузка корабля: " + ship.hashCode() + " началась. " + "Время разгрузки: " + unloadTime);
                     TimeUnit.SECONDS.sleep(unloadTime);
 
-                    System.out.println(format.format(new Date()) + "Пирс1 - левая сторона: " +
+                    System.out.println(format.format(new Date()) + "Пирс1 - правая сторона: " +
                             "Разгрузка корабля: " + ship.hashCode() +  " закончилась.");
                     pier.getSem().release();
                     System.out.println(format.format(new Date()) +
                             "Количество ожидающих кораблей: " + pier.getSem().getQueueLength());
                 }
-
 
             }
         } catch (InterruptedException e) {
