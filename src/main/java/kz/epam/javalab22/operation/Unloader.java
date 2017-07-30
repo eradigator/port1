@@ -37,12 +37,11 @@ public class Unloader extends Thread {
 
                     System.out.println(format.format(new Date()) + pier.getName() +
                             "Разгрузка корабля: " + ship.hashCode() + " закончилась.");
-                    System.out.println(format.format(new Date()) + pier.getName().substring(0,5) + " " +
-                            "Количество ожидающих кораблей: " +  pier.getSem().getQueueLength());
-
                 }
-                pier.getSem().release();
 
+                pier.getSem().release();
+                System.out.println(format.format(new Date()) + pier.getName().substring(0,5) + " " +
+                        "Количество ожидающих кораблей: " +  pier.getSem().getQueueLength());
 
             }
         } catch (InterruptedException e) {

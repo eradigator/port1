@@ -8,10 +8,10 @@ public class Pier {
     private int unloadingSpeed;
     private Semaphore sem;
 
-    public Pier(String name, int unloadingSpeed, Semaphore sem) {
+    public Pier(String name, int unloadingSpeed, int semaphoreThreadsCount) {
         this.unloadingSpeed = unloadingSpeed;
         this.name = name;
-        this.sem = sem;
+        this.sem = new Semaphore(semaphoreThreadsCount);
     }
 
     public String getName() {
