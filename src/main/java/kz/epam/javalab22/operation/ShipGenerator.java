@@ -6,17 +6,18 @@ import kz.epam.javalab22.entity.ShipSize;
 
 import java.util.AbstractQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 public class ShipGenerator extends Thread{
 
     private int shipsToGenerateCount;
-    private Pier pier1Left = new Pier("Пирс1, левая сторона. ",3);
-    private Pier pier1Right = new Pier("Пирс1, правая сторона. ",2);
-    private Pier pier2Left = new Pier("Пирс2, левая сторона. ",9);
-    private Pier pier2Right = new Pier("Пирс2, правая сторона. ",7);
-    private Pier pier3Left = new Pier("Пирс3, левая сторона. ",15);
-    private Pier pier3Right = new Pier("Пирс3, правая сторона. ",12);
+    private Pier pier1Left = new Pier("Пирс1, левая сторона. ",3, new Semaphore(1));
+    private Pier pier1Right = new Pier("Пирс1, правая сторона. ",2, new Semaphore(1));
+    private Pier pier2Left = new Pier("Пирс2, левая сторона. ",9, new Semaphore(1));
+    private Pier pier2Right = new Pier("Пирс2, правая сторона. ",7, new Semaphore(1));
+    private Pier pier3Left = new Pier("Пирс3, левая сторона. ",12, new Semaphore(1));
+    private Pier pier3Right = new Pier("Пирс3, правая сторона. ",10, new Semaphore(1));
 
     private AbstractQueue<Ship> queue = new ConcurrentLinkedQueue<>();
 
@@ -45,7 +46,7 @@ public class ShipGenerator extends Thread{
             }
 
             try {
-                int randomArrivalInterval = (int) (Math.random() * 10);
+                int randomArrivalInterval = (int) (Math.random() * 5 + 5);
                 TimeUnit.SECONDS.sleep(randomArrivalInterval);
             } catch (InterruptedException e) {
                 e.printStackTrace();
