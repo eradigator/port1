@@ -4,14 +4,16 @@ import java.util.concurrent.Semaphore;
 
 public class Pier {
 
+    private static final int SEMAPHORE_PERMITS_COUNT = 1;
+
     private String name;
     private int unloadingSpeed;
     private Semaphore sem;
 
-    public Pier(String name, int unloadingSpeed, int semaphoreThreadsCount) {
+    public Pier(String name, int unloadingSpeed) {
         this.unloadingSpeed = unloadingSpeed;
         this.name = name;
-        this.sem = new Semaphore(semaphoreThreadsCount);
+        this.sem = new Semaphore(SEMAPHORE_PERMITS_COUNT);
     }
 
     public String getName() {
