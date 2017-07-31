@@ -5,6 +5,11 @@ import java.util.Date;
 
 public class Ship {
 
+    private static final String DATE_FORMAT_PATTERN = "hh:mm:ss ";
+    private static final String SHIP_HAS_ARRIVED_STRING = "Прибыл корабль: ";
+    private static final String SIZE_STRING = " Размер: ";
+    private static final String BOX_COUNT_STRING = " Кол-во коробок: ";
+
     private int boxCount;
     private ShipSize size;
 
@@ -13,11 +18,11 @@ public class Ship {
         this.boxCount = boxCount;
         this.size = size;
 
-        SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss ");
+        SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT_PATTERN);
         System.out.println(format.format(new Date()) +
-                "Прибыл корабль: " + this.hashCode() +
-                " Размер: " + size +
-                " Кол-во коробок: " + boxCount);
+                SHIP_HAS_ARRIVED_STRING + this.hashCode() +
+                SIZE_STRING + size +
+                BOX_COUNT_STRING + boxCount);
     }
 
     public int getBoxCount() {
