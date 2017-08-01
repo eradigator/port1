@@ -2,9 +2,14 @@ package kz.epam.javalab22.operation;
 
 import kz.epam.javalab22.entity.Pier;
 import kz.epam.javalab22.entity.Ship;
+import kz.epam.javalab22.entity.ShipSize;
 
+import java.text.SimpleDateFormat;
 import java.util.AbstractQueue;
+import java.util.Date;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 
@@ -17,6 +22,8 @@ public class Dispatcher extends Thread {
     private final String PIER3_LEFT_NAME = "Пирс3, левая сторона. ";
     private final String PIER3_RIGHT_NAME = "Пирс3, правая сторона. ";
 
+
+
     private final int P1L_UNLOADING_SPEED = 2;
     private final int P1R_UNLOADING_SPEED = 1;
     private final int P2L_UNLOADING_SPEED = 5;
@@ -24,12 +31,9 @@ public class Dispatcher extends Thread {
     private final int P3L_UNLOADING_SPEED = 8;
     private final int P3R_UNLOADING_SPEED = 10;
 
-    private static final int SMALL_SHIP_BOX_COUNT_EDGE = 100;
-    private static final int MIDDLE_SHIP_BOX_COUNT_EDGE = 175;
-    private static final int BIG_SHIP_BOX_COUNT_EDGE = 250;
-    private static final int RANDOM_BOX_COUNT_RANGE = 200;
-    private static final int RANDOM_BOX_COUNT_LOW_EDGE = 50;
-    private static final int RANDOM_ARRIVAL_INTERVAL_RANGE = 7;
+    private static final String ARRIVED_TO_DISPATCHER_STRING = "Прибыл в диспетчерскую";
+    private static final String SPACE_DIVIDER = " ";
+    private static final int RANDOM_ARRIVAL_INTERVAL_RANGE = 5;
     private static final int RANDOM_ARRIVAL_INTERVAL_LOW_EDGE = 1;
 
     private Pier pier1Left = new Pier(PIER1_LEFT_NAME, P1L_UNLOADING_SPEED);
@@ -44,7 +48,9 @@ public class Dispatcher extends Thread {
     private AbstractQueue<Ship> queueM = new ConcurrentLinkedQueue<>();
     private AbstractQueue<Ship> queueB = new ConcurrentLinkedQueue<>();
 
-    private int counter = 0;
+    private static final String DATE_FORMAT_PATTERN = "hh:mm:ss ";
+    private SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT_PATTERN);
+
 
     public Dispatcher(AbstractQueue<Ship> queue) {
         this.queue = queue;
@@ -52,59 +58,50 @@ public class Dispatcher extends Thread {
 
     @Override
     public void run() {
+        Ship ship;
 
         while (!queue.isEmpty()) {
-            Ship ship = queue.poll();
-            counter++;
-            System.out.println(ship.getSize().toString() + counter);
+
+            ship = queue.poll();
 
             switch (ship.getSize()) {
                 case SMALL:
                     queueS.add(ship);
-                    System.out.println(ship.getSize());
-                   /* new Unloader(queueS, pier1Left).start();
-                    new Unloader(queueS, pier1Right).start();*/
+
+                    System.out.println(format.format(new Date()) + ship.hashCode() + SPACE_DIVIDER +
+                            ship.getSize() + SPACE_DIVIDER + ARRIVED_TO_DISPATCHER_STRING);
+                    new PierUnloader(queueS, pier1Left).start();
+                    new PierUnloader(queueS, pier1Right).start();
+                    break;
                 case MEDIUM:
                     queueM.add(ship);
-                    System.out.println(ship.getSize());
-                    /*new Unloader(queueM, pier2Left).start();
-                    new Unloader(queueM, pier2Right).start();*/
+                    System.out.println(format.format(new Date()) + ship.hashCode() + SPACE_DIVIDER +
+                            ship.getSize() + SPACE_DIVIDER + ARRIVED_TO_DISPATCHER_STRING);
+                    new PierUnloader(queueM, pier2Left).start();
+                    new PierUnloader(queueM, pier2Right).start();
+                    break;
                 case BIG:
                     queueB.add(ship);
-                    System.out.println(ship.getSize());
-                    /*new Unloader(queueB, pier3Left).start();
-                    new Unloader(queueB, pier3Right).start();*/
+                    System.out.println(format.format(new Date()) + ship.hashCode() + SPACE_DIVIDER +
+                            ship.getSize() + SPACE_DIVIDER + ARRIVED_TO_DISPATCHER_STRING);
+                    new PierUnloader(queueB, pier3Left).start();
+                    new PierUnloader(queueB, pier3Right).start();
+                    break;
             }
 
-
-       /* for (Ship ship : queue) {
-
-//            if (!queue.isEmpty()) {
-            switch (ship.getSize()) {
-                case SMALL:
-                    queueS.add(ship);
-                    new Unloader(queueS, pier1Left).start();
-                    new Unloader(queueS, pier1Right).start();
-                case MEDIUM:
-                    queueM.add(ship);
-                    new Unloader(queueM, pier2Left).start();
-                    new Unloader(queueM, pier2Right).start();
-                case BIG:
-                    queueB.add(ship);
-                    new Unloader(queueB, pier3Left).start();
-                    new Unloader(queueB, pier3Right).start();
-            }*/
-            //   }
-
-            try {
-                int randomArrivalInterval = (int) (Math.random() * RANDOM_ARRIVAL_INTERVAL_RANGE +
-                        RANDOM_ARRIVAL_INTERVAL_LOW_EDGE);
-                TimeUnit.SECONDS.sleep(randomArrivalInterval);
-
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            sleep();
         }
+    }
+
+    private void sleep() {
+        int randomArrivalInterval = (int) (Math.random() * RANDOM_ARRIVAL_INTERVAL_RANGE +
+                RANDOM_ARRIVAL_INTERVAL_LOW_EDGE);
+        try {
+            TimeUnit.SECONDS.sleep(randomArrivalInterval);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 }
 
