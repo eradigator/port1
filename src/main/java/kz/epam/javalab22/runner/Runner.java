@@ -6,10 +6,10 @@ import kz.epam.javalab22.operation.ShipGenerator;
 
 import java.util.AbstractQueue;
 
+
 public class Runner {
 
     private static final int COUNTS_OF_SHIPS_TO_GENERATE = 10;
-
 
     public static void main(String[] args) {
 
@@ -18,6 +18,5 @@ public class Runner {
 
         Dispatcher dispatcher = new Dispatcher(shipsQueue);
         dispatcher.start();
-
     }
 }
