@@ -17,6 +17,7 @@ public class Runner {
         AbstractQueue<Ship> shipsQueue;
         shipsQueue = new ShipGenerator().generate(COUNTS_OF_SHIPS_TO_GENERATE);
 
+        
         Dispatcher dispatcher = new Dispatcher(shipsQueue);
         dispatcher.start();
 
