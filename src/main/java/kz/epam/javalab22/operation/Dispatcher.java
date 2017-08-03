@@ -2,14 +2,11 @@ package kz.epam.javalab22.operation;
 
 import kz.epam.javalab22.entity.Pier;
 import kz.epam.javalab22.entity.Ship;
-import kz.epam.javalab22.entity.ShipSize;
 
 import java.text.SimpleDateFormat;
 import java.util.AbstractQueue;
 import java.util.Date;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 
@@ -22,8 +19,6 @@ public class Dispatcher extends Thread {
     private final String PIER3_LEFT_NAME = "Пирс3, левая сторона. ";
     private final String PIER3_RIGHT_NAME = "Пирс3, правая сторона. ";
 
-
-
     private final int P1L_UNLOADING_SPEED = 2;
     private final int P1R_UNLOADING_SPEED = 1;
     private final int P2L_UNLOADING_SPEED = 5;
@@ -31,7 +26,7 @@ public class Dispatcher extends Thread {
     private final int P3L_UNLOADING_SPEED = 8;
     private final int P3R_UNLOADING_SPEED = 10;
 
-    private static final String ARRIVED_TO_DISPATCHER_STRING = "Прибыл в диспетчерскую";
+    private static final String SHIP_ARRIVED_STRING = "Прибыл корабль: ";
     private static final String SPACE_DIVIDER = " ";
     private static final int RANDOM_ARRIVAL_INTERVAL_RANGE = 5;
     private static final int RANDOM_ARRIVAL_INTERVAL_LOW_EDGE = 1;
@@ -48,9 +43,12 @@ public class Dispatcher extends Thread {
     private AbstractQueue<Ship> queueM = new ConcurrentLinkedQueue<>();
     private AbstractQueue<Ship> queueB = new ConcurrentLinkedQueue<>();
 
+    private PierUnloader pierUnloaderS = new PierUnloader(queueS, pier1Left, pier1Right);
+    private PierUnloader pierUnloaderM = new PierUnloader(queueM, pier2Left, pier2Right);
+    private PierUnloader pierUnloaderB = new PierUnloader(queueB, pier3Left, pier3Right);
+
     private static final String DATE_FORMAT_PATTERN = "hh:mm:ss ";
     private SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT_PATTERN);
-
 
     public Dispatcher(AbstractQueue<Ship> queue) {
         this.queue = queue;
@@ -63,35 +61,28 @@ public class Dispatcher extends Thread {
         while (!queue.isEmpty()) {
 
             ship = queue.poll();
+            System.out.println(format.format(new Date()) + SHIP_ARRIVED_STRING + ship.hashCode() + SPACE_DIVIDER +
+                    ship.getSize() + SPACE_DIVIDER);
 
             switch (ship.getSize()) {
                 case SMALL:
                     queueS.add(ship);
-
-                    System.out.println(format.format(new Date()) + ship.hashCode() + SPACE_DIVIDER +
-                            ship.getSize() + SPACE_DIVIDER + ARRIVED_TO_DISPATCHER_STRING);
-                    new PierUnloader(queueS, pier1Left).start();
-                    new PierUnloader(queueS, pier1Right).start();
+                    pierUnloaderS.run();
                     break;
                 case MEDIUM:
                     queueM.add(ship);
-                    System.out.println(format.format(new Date()) + ship.hashCode() + SPACE_DIVIDER +
-                            ship.getSize() + SPACE_DIVIDER + ARRIVED_TO_DISPATCHER_STRING);
-                    new PierUnloader(queueM, pier2Left).start();
-                    new PierUnloader(queueM, pier2Right).start();
+                    pierUnloaderM.run();
                     break;
                 case BIG:
                     queueB.add(ship);
-                    System.out.println(format.format(new Date()) + ship.hashCode() + SPACE_DIVIDER +
-                            ship.getSize() + SPACE_DIVIDER + ARRIVED_TO_DISPATCHER_STRING);
-                    new PierUnloader(queueB, pier3Left).start();
-                    new PierUnloader(queueB, pier3Right).start();
+                    pierUnloaderB.run();
                     break;
             }
 
-            sleep();
+            this.sleep();
         }
     }
+
 
     private void sleep() {
         int randomArrivalInterval = (int) (Math.random() * RANDOM_ARRIVAL_INTERVAL_RANGE +
