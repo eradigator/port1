@@ -44,7 +44,7 @@ public class ShipGenerator {
             if (ship != null) {
                 SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT_PATTERN);
                 System.out.println(format.format(new Date()) +
-                        SHIP_HAS_BEEN_CREATED_STRING + this.hashCode() +
+                        SHIP_HAS_BEEN_CREATED_STRING + ship.hashCode() +
                         SIZE_STRING + ship.getSize() +
                         BOX_COUNT_STRING + ship.getBoxCount());
             }
