@@ -19,12 +19,12 @@ public class Dispatcher extends Thread {
     private final String PIER3_LEFT_NAME = "Пирс3, левая сторона. ";
     private final String PIER3_RIGHT_NAME = "Пирс3, правая сторона. ";
 
-    private final int P1L_UNLOADING_SPEED = 2;
-    private final int P1R_UNLOADING_SPEED = 1;
-    private final int P2L_UNLOADING_SPEED = 5;
-    private final int P2R_UNLOADING_SPEED = 4;
-    private final int P3L_UNLOADING_SPEED = 8;
-    private final int P3R_UNLOADING_SPEED = 10;
+    private final int P1L_UNLOADING_SPEED = 4;
+    private final int P1R_UNLOADING_SPEED = 3;
+    private final int P2L_UNLOADING_SPEED = 8;
+    private final int P2R_UNLOADING_SPEED = 7;
+    private final int P3L_UNLOADING_SPEED = 12;
+    private final int P3R_UNLOADING_SPEED = 11;
 
     private static final String SHIP_ARRIVED_STRING = "Прибыл корабль: ";
     private static final String SPACE_DIVIDER = " ";
