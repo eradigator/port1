@@ -23,12 +23,12 @@ public class ShipUnloader extends Thread {
 
     private Pier pier;
     private AbstractQueue<Ship> queue;
-    private Semaphore sem;
+    private Semaphore semaphore;
 
     public ShipUnloader(AbstractQueue<Ship> queue, Pier pier) {
         this.queue = queue;
         this.pier = pier;
-        this.sem = pier.getSem();
+        this.semaphore = pier.getSem();
     }
 
     @Override
@@ -39,7 +39,7 @@ public class ShipUnloader extends Thread {
         while (!queue.isEmpty()) {
             try {
                 {
-                    sem.acquire();
+                    semaphore.acquire();
 
                     Ship ship;
 
@@ -60,12 +60,12 @@ public class ShipUnloader extends Thread {
                                 ENDED_STRING);
                     }
 
-                    sem.release();
+                    semaphore.release();
 
-                    if (sem.hasQueuedThreads()) {
+                    if (semaphore.hasQueuedThreads()) {
                         System.out.println(format.format(new Date()) +
                                 pier.getName().substring(START_INDEX_IN_PIER_NAME, END_INDEX_IN_PIER_NAME) +
-                                SPACE_DIVIDER + QUEUE_LENGTH_STRING + (sem.getQueueLength()));
+                                SPACE_DIVIDER + QUEUE_LENGTH_STRING + (semaphore.getQueueLength()));
                     }
                 }
             } catch (InterruptedException e) {
